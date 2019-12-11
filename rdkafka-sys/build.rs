@@ -4,6 +4,8 @@ use std::ffi::OsStr;
 use std::path::{Path, PathBuf};
 use std::process::{self, Command};
 
+use bindgen;
+
 fn run_command_or_fail<P, S>(dir: &str, cmd: P, args: &[S])
 where
     P: AsRef<Path>,
@@ -36,6 +38,32 @@ where
         Err(e) => panic!("Command failed with error: {}", e),
     }
 }
+
+fn run_bindgen() {
+    println!("cargo:rerun-if-changed=librdkafka/src/rdkafka.h");
+
+    let bindings = bindgen::Builder::default()
+        .header("librdkafka/src/rdkafka.h")
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .generate_comments(false)
+        .layout_tests(false)
+        .rustified_enum(".*")
+        .whitelist_function("rd_kafka.*")
+        .whitelist_type("rd_kafka.*")
+        .whitelist_var("rd_kafka.*|RD_KAFKA_.*")
+        .whitelist_recursively(false)
+        .blacklist_function("rd_kafka_conf_set_open_cb")
+        .raw_line("type FILE = libc::FILE;")
+        .raw_line("type sockaddr = libc::sockaddr;")
+        .generate()
+        .expect("Unable to generate bindings");
+
+    let out_path = "src/bindings.rs";
+    bindings
+        .write_to_file(PathBuf::from(out_path))
+        .expect(&format!("Could not write bindings to {:?}", out_path));
+}
+
 
 fn main() {
     let librdkafka_version = env!("CARGO_PKG_VERSION")
@@ -80,6 +108,8 @@ fn main() {
         eprintln!("Building and linking librdkafka statically");
         build_librdkafka();
     }
+
+    run_bindgen();
 }
 
 #[cfg(not(feature = "cmake-build"))]

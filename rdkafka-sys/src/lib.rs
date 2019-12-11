@@ -1,14 +1,13 @@
 //! Low level bindings to [librdkafka](https://github.com/edenhill/librdkafka).
 //!
+//! **Note**: This README.md file is generated using
+//! [`cargo-readme`](https://github.com/livioribeiro/cargo-readme)
+//!
 //! ## Bindings
 //!
-//! To regenerate the bindings:
+//! Bindings are regenerated as part of `cargo build`. Check out the method
+//! `run_bindgen()` in `build.rs`.
 //!
-//! ``` bash
-//! git submodule update --init
-//! cargo install bindgen
-//! ./update-bindings.sh
-//! ```
 //!
 //! ## Version
 //!

@@ -2,15 +2,14 @@
 
 Low level bindings to [librdkafka](https://github.com/edenhill/librdkafka).
 
+**Note**: This README.md file is generated using
+[`cargo-readme`](https://github.com/livioribeiro/cargo-readme)
+
 ## Bindings
 
-To regenerate the bindings:
+Bindings are regenerated as part of `cargo build`. Check out the method
+`run_bindgen()` in `build.rs`.
 
-``` bash
-git submodule update --init
-cargo install bindgen
-./update-bindings.sh
-```
 
 ## Version
 
@@ -80,7 +79,7 @@ you would pass to `configure` if you were compiling manually).
     liblz4.
 
 All features are disabled by default unless noted otherwise above. The build
-process is defined in [`build.rs`](build.rs).
+process is defined in [`build.rs`].
 
 ## Updating
 
@@ -90,3 +89,6 @@ the version in `Cargo.toml`.
 
 [CMake]: https://cmake.org
 [mklove]: https://github.com/edenhill/mklove
+[`build.rs`]: https://github.com/fede1024/rust-rdkafka/tree/master/rdkafka-sys/build.rs
+
+License: MIT
